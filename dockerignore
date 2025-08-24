@@ -1,0 +1,177 @@
+# Docker ignore file for Music Streaming Churn Prediction Project
+# Reduces build context and improves security by excluding unnecessary files
+
+# Version Control
+.git
+.gitignore
+.github/
+.gitattributes
+.gitmodules
+
+# Documentation
+README.md
+README_sample.md
+Tech_report.pdf
+Technical-Report.md
+*.md
+docs/
+*.rst
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Python Cache and Compiled Files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+.env
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+pip-selfcheck.json
+
+# Testing and Coverage
+.coverage
+.pytest_cache/
+.cache
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+htmlcov/
+.tox/
+.nox/
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+*.ipynb
+*-checkpoint.ipynb
+
+# Data Files (exclude from container for security)
+*.csv
+*.json
+*.jsonl
+*.parquet
+*.pkl
+*.pickle
+data/
+datasets/
+customer_churn.json
+
+# Model Files (handled separately in deployment)
+models/*.pkl
+models/*.joblib
+models/*.json
+mlruns/
+*.model
+
+# Logs and Temporary Files
+logs/
+*.log
+*.log.*
+.logs
+temp/
+tmp/
+*.tmp
+*.temp
+
+# OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Security and Secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+secrets/
+.secrets
+
+# Development Tools
+.pre-commit-config.yaml
+.flake8
+.pylintrc
+mypy.ini
+pytest.ini
+setup.cfg
+tox.ini
+.bandit
+.ruff_cache/
+
+# Docker Files (avoid recursive copying)
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+Jenkinsfile
+
+# Package Management
+Pipfile
+Pipfile.lock
+poetry.lock
+requirements-dev.txt
+requirements-test.txt
+
+# Makefile and Scripts
+Makefile
+scripts/
+
+# Backup Files
+*.bak
+*.backup
+*.old
+*~
+
+# Large Files That Shouldn't Be in Container
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Monitoring and Profiling
+.profile
+*.prof
+.coverage.*
+.cache/
+profile_*

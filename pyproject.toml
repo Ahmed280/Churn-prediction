@@ -1,0 +1,127 @@
+# Ruff configuration for Music Streaming Churn Prediction Project
+# Modern Python linting and formatting with comprehensive rules
+
+[tool.ruff]
+# Target Python 3.11+ 
+target-version = "py311"
+line-length = 88
+indent-width = 4
+
+# Include and exclude patterns
+include = ["*.py", "*.pyi"]
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+    "mlruns",
+    "*.ipynb",
+]
+
+[tool.ruff.lint]
+# Enable comprehensive linting rules
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # Pyflakes
+    "I",    # isort
+    "N",    # pep8-naming
+    "D",    # pydocstyle
+    "UP",   # pyupgrade
+    "B",    # flake8-bugbear
+    "C",    # flake8-comprehensions
+    "S",    # flake8-bandit (security)
+    "T",    # flake8-print
+    "SIM",  # flake8-simplify
+    "PL",   # Pylint
+    "RUF",  # Ruff-specific rules
+]
+
+ignore = [
+    "D100",   # Missing docstring in public module
+    "D104",   # Missing docstring in public package
+    "D203",   # 1 blank line required before class docstring
+    "D213",   # Multi-line docstring summary should start at the second line
+    "D401",   # First line should be in imperative mood
+    "S101",   # Use of assert detected (okay in tests)
+    "S108",   # Probable insecure usage of temp file/directory
+    "PLR0913", # Too many arguments to function call
+    "PLR0912", # Too many branches
+    "PLR0915", # Too many statements
+    "C901",   # Too complex (we handle this with business logic)
+    "T201",   # print statements (okay for CLI tools)
+]
+
+# Allow fix for all enabled rules (where applicable)
+fixable = ["ALL"]
+unfixable = []
+
+# Allow unused variables when underscore-prefixed
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.lint.per-file-ignores]
+# Test files can have additional flexibility
+"test_*.py" = [
+    "S101",   # asserts are fine in tests
+    "D103",   # tests don't need docstrings
+    "PLR2004", # magic values are common in tests
+]
+"**/tests/**" = ["S101", "D103", "PLR2004"]
+
+# Jupyter notebooks have different requirements
+"*.ipynb" = ["ALL"]
+
+# Scripts can be less strict
+"scripts/*" = ["T201", "S602"]
+
+[tool.ruff.lint.isort]
+# Configure import sorting
+known-first-party = ["churn"]
+force-single-line = false
+force-sort-within-sections = false
+single-line-exclusions = ["os", "sys"]
+
+[tool.ruff.lint.pydocstyle]
+# Use Google-style docstrings
+convention = "google"
+
+[tool.ruff.lint.mccabe]
+# Maximum cyclomatic complexity
+max-complexity = 15
+
+[tool.ruff.lint.pylint]
+# Maximum number of arguments for function / method
+max-args = 8
+# Maximum number of branches for function / method body
+max-branches = 15
+# Maximum number of return / yield for function / method body
+max-returns = 8
+# Maximum number of statements in function / method body
+max-statements = 60
+
+[tool.ruff.format]
+# Formatting configuration
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+docstring-code-format = true
+docstring-code-line-length = "dynamic"
