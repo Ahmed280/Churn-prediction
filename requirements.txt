@@ -19,3 +19,5 @@ xgboost
 fastapi
 scipy
 uvicorn
+ruff 
+black
