@@ -1,0 +1,21 @@
+# Requirements for project pipeline
+# Minimal, with no unnecessary assumptions.
+
+# Core
+numpy
+pandas
+scikit-learn>=1.2
+joblib
+mlflow
+optuna
+tensorflow
+# Optional: Spark ingestion (comment out if you won't use Spark)
+pyspark
+
+jupyterlab
+notebook
+seaborn
+xgboost
+fastapi
+scipy
+uvicorn
