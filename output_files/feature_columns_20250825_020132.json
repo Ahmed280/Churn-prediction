@@ -1,0 +1,21 @@
+[
+  "total_events",
+  "unique_sessions",
+  "total_songs_played",
+  "avg_session_length",
+  "days_active",
+  "thumbs_up",
+  "thumbs_down",
+  "home_visits",
+  "settings_visits",
+  "help_visits",
+  "add_friend",
+  "add_playlist",
+  "engagement_ratio",
+  "avg_daily_events",
+  "paid_events_ratio",
+  "last_level_paid",
+  "weekend_activity_ratio",
+  "peak_hour",
+  "session_variety"
+]
