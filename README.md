@@ -628,13 +628,6 @@ git checkout -b feature/your-feature-name
 - 🚀 **Performance**: API optimization and scaling
 - 📖 **Documentation**: Tutorials and examples
 
-## 📞 Support & Contact
-
-- 📧 **Email**: [ahmed.alghaith@example.com](mailto:ahmed.alghaith@example.com)
-- 🐛 **Issues**: [GitHub Issues](https://github.com/your-repo/churn-prediction/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/your-repo/churn-prediction/discussions)
-- 📖 **Documentation**: [Project Wiki](https://github.com/your-repo/churn-prediction/wiki)
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
