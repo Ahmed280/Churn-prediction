@@ -125,3 +125,20 @@ skip-magic-trailing-comma = false
 line-ending = "auto"
 docstring-code-format = true
 docstring-code-line-length = "dynamic"
+
+# --- uv configuration ---
+[tool.uv]
+# Where uv should write the virtual environment
+venv = ".venv"
+
+# Default Python version to use (matches Ruff target)
+python = "3.11"
+
+# Require a lockfile for reproducible installs
+require-lock = true
+
+# Enable hash-checking for extra security
+check-hashes = true
+
+# Automatically sync venv on install
+sync = true
