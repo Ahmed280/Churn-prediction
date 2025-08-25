@@ -20,27 +20,28 @@ repos:
       - id: mixed-line-ending
         args: ['--fix=lf']
 
-  # Ruff for linting and formatting (replaces black, isort, flake8)
+  # Ruff for linting and formatting (via uv)
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.6.9  # Use latest stable version
     hooks:
-      # Run the linter with auto-fixes
       - id: ruff-check
         args: [--fix, --exit-non-zero-on-fix]
         types_or: [python, pyi]
-      # Run the formatter
+        additional_dependencies: ["uv"]  # ensure uv available
       - id: ruff-format
         types_or: [python, pyi]
+        additional_dependencies: ["uv"]
 
-  # Security scanning for Python dependencies
+  # Security scanning for Python dependencies (run under uv)
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.5
     hooks:
       - id: bandit
         args: ['-r', '.', '--exclude', 'tests/']
-        language: python
+        language: system  # run via system so uv can handle deps
+        entry: uv run bandit
 
-  # Jupyter notebook cleaning (if using notebooks)
+  # Jupyter notebook cleaning
   - repo: https://github.com/kynan/nbstripout
     rev: 0.7.1
     hooks:
@@ -54,17 +55,23 @@ repos:
       - id: hadolint-docker
         args: ['--ignore', 'DL3008', '--ignore', 'DL3009']
 
-  # YAML formatting
+  # YAML/Markdown formatting (via uv-prettier)
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
         types_or: [yaml, markdown]
         exclude: '\.github/.*'
+        additional_dependencies: ["uv"]
 
 # Configuration for pre-commit
 default_language_version:
   python: python3.11
+
+# Enable uv as default package installer for hooks
+default_install_hook_types: [pre-commit, pre-push]
+default_stages: [commit]
+default_language: system
 
 # CI configuration
 ci:
