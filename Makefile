@@ -19,6 +19,10 @@ else
     ACTIVATE := $(VENV_DIR)/bin/activate
 endif
 
+# Detect uv (fast Python package manager); fall back to pip
+UV := $(shell command -v uv 2>/dev/null || true)
+UV_PIP := $(if $(UV),$(UV) pip --python $(PYTHON),$(PIP))
+
 # Project variables
 PROJECT_NAME := churn-prediction
 DOCKER_IMAGE := $(PROJECT_NAME):latest
@@ -35,22 +39,59 @@ help: ## Show this help message
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 	@echo ""
 
+# --- uv helpers ---
+.PHONY: uv-bootstrap
+uv-bootstrap: ## Install uv (Unix/mac: curl; Windows: PowerShell) into the current user profile
+ifeq ($(OS),Windows_NT)
+	@echo "⬇️  Installing uv on Windows via PowerShell..."
+	powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://astral.sh/uv/install.ps1 | iex"
+	@echo "✅ uv installed. Restart your shell or ensure uv is on PATH."
+else
+	@echo "⬇️  Installing uv on Unix via curl..."
+	curl -LsSf https://astral.sh/uv/install.sh | sh
+	@echo 'export PATH="$$HOME/.cargo/bin:$$PATH"' >> ~/.bashrc || true
+	@echo "✅ uv installed. Restart your shell or run: export PATH=\"$$HOME/.cargo/bin:$$PATH\""
+endif
+
+.PHONY: uv-venv
+uv-venv: ## Create virtual environment using uv (faster)
+	@echo "🐍 Creating virtual environment with uv..."
+	@if [ -z "$(UV)" ]; then echo "❌ uv not found. Run: make uv-bootstrap"; exit 1; fi
+	uv venv $(VENV_DIR)
+	@echo "✅ Virtual environment created at $(VENV_DIR)"
+	@echo "💡 Activate with: source $(ACTIVATE)"
+
+.PHONY: lock
+lock: ## Freeze dependencies to requirements.lock.txt (uses uv if available)
+	@echo "🔒 Freezing dependencies..."
+	@if [ -n "$(UV)" ]; then \
+	  $(UV) pip --python $(PYTHON) freeze > requirements.lock.txt; \
+	else \
+	  $(PIP) freeze > requirements.lock.txt; \
+	fi
+	@echo "✅ Wrote requirements.lock.txt"
+
 # Environment setup
 .PHONY: install
-install: ## Install Python dependencies and setup environment
+install: ## Install Python dependencies and setup environment (prefers uv)
 	@echo "🔧 Setting up development environment..."
-	$(PYTHON) -m pip install --upgrade pip
-	$(PIP) install -r requirements.txt
+	@if [ -z "$(wildcard $(VENV_DIR))" ]; then \
+	  echo 'ℹ️  No venv found. Creating with python -m venv (or use "make uv-venv" for faster setup)'; \
+	  python3 -m venv $(VENV_DIR); \
+	fi
+	@echo "➡️  Using installer: $(if $(UV),uv pip,$(PIP))"
+	$(UV_PIP) install --upgrade pip
+	$(UV_PIP) install -r requirements.txt
 	@echo "✅ Dependencies installed successfully"
 
 .PHONY: install-dev
-install-dev: install ## Install development dependencies including pre-commit
-	$(PIP) install pre-commit ruff black pytest pytest-cov bandit
+install-dev: install ## Install development dependencies including pre-commit (prefers uv)
+	$(UV_PIP) install pre-commit ruff black pytest pytest-cov bandit
 	pre-commit install
 	@echo "✅ Development environment ready"
 
 .PHONY: venv
-venv: ## Create virtual environment
+venv: ## Create virtual environment (stdlib venv)
 	@echo "🐍 Creating virtual environment..."
 	python3 -m venv $(VENV_DIR)
 	$(PIP) install --upgrade pip
@@ -276,7 +317,7 @@ status: ## Show project status
 	@echo "📊 Project Status:"
 	@echo "=================="
 	@echo "Python: $(shell $(PYTHON) --version)"
-	@echo "Pip: $(shell $(PIP) --version)"
+	@echo "Pip/uv: $(if $(UV),$(shell $(UV) --version | head -n1),$(shell $(PIP) --version))"
 	@echo "Virtual env: $(if $(wildcard $(VENV_DIR)),✅ Active,❌ Not found)"
 	@echo "Data file: $(if $(wildcard $(DATA_FILE)),✅ Found,❌ Missing)"
 	@echo "Models dir: $(if $(wildcard $(MODEL_DIR)),✅ Found,❌ Missing)"
