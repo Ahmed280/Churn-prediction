@@ -77,7 +77,8 @@ make dev-setup
 # Or manual setup
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\\Scripts\\activate
-pip install -r requirements.txt
+pip install uv
+uv pip install -r requirements.txt
 pre-commit install
 ```
 
